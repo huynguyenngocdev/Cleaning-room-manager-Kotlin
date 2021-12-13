@@ -5,6 +5,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -25,18 +27,19 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.huydiem.cleaningroommanager.R
+import com.huydiem.cleaningroommanager.CleaningRoomManager.Companion.currentUser
 import com.huydiem.cleaningroommanager.model.LoginScreenViewModel
 import com.huydiem.cleaningroommanager.routing.Router
 import com.huydiem.cleaningroommanager.routing.Screen
-import com.huydiem.cleaningroommanager.ui.components.GoogleSignInButton
+import com.huydiem.cleaningroommanager.presentation.task_list.components.GoogleSignInButton
 import com.huydiem.cleaningroommanager.utils.LoadingState
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
 fun LoginScreen(viewModel: LoginScreenViewModel) {
-
+    val coroutineScope = rememberCoroutineScope()
+    val user by remember(viewModel) { viewModel.user }.collectAsState()
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
 
@@ -51,6 +54,16 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                 val account = task.getResult(ApiException::class.java)!!
                 val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
                 viewModel.signWithCredential(credential)
+                coroutineScope.launch {
+                    if (account.email != null && account.displayName != null) {
+                        viewModel.addCurrentUser(
+                            uid = account.id.toString(),
+                            email = account.email!!,
+                            name = account.displayName!!,
+                            photoUrl = account.photoUrl!!
+                        )
+                    }
+                }
             } catch (e: ApiException) {
                 Log.w("TAG", "Google sign in failed", e)
             }
@@ -95,7 +108,8 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(24.dp)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
@@ -205,6 +219,10 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                     when (state.status) {
                         LoadingState.Status.SUCCESS -> {
                             Text(text = "Success")
+                            user?.let { it ->
+                                currentUser = it
+                            }
+                            user?.let { it1 -> Log.d("User Id", it1.uid) }
                             Router.navigateTo(Screen.Home)
                         }
                         LoadingState.Status.FAILED -> {

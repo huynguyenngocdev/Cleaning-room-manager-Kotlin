@@ -1,4 +1,4 @@
-package com.huydiem.cleaningroommanager.ui.components
+package com.huydiem.cleaningroommanager.presentation.task_list.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing

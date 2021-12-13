@@ -9,8 +9,9 @@ import androidx.compose.runtime.setValue
  */
 sealed class Screen {
     object Home : Screen()
+    object NeedLogin : Screen()
     object Login : Screen()
-    object Task : Screen()
+    object TaskDetail: Screen()
     object Account : Screen()
     object Member : Screen()
 }
@@ -21,7 +22,7 @@ sealed class Screen {
  * Also keeps track of the current screen.
  */
 object Router {
-    var currentScreen: Screen by mutableStateOf(Screen.Home)
+    var currentScreen: Screen by mutableStateOf(Screen.NeedLogin)
 
     fun navigateTo(destination: Screen) {
         currentScreen = destination

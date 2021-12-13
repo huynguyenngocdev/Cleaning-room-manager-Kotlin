@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,17 +18,25 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.huydiem.cleaningroommanager.CleaningRoomManager.Companion.currentUser
 import com.huydiem.cleaningroommanager.R
+import com.huydiem.cleaningroommanager.model.LoginScreenViewModel
+import com.huydiem.cleaningroommanager.model.UserModel
 import com.huydiem.cleaningroommanager.routing.Router
 import com.huydiem.cleaningroommanager.routing.Screen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
-fun AccountScreen() {
-    val user = Firebase.auth.currentUser
+fun AccountScreen(user: UserModel, viewModel: LoginScreenViewModel) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +71,8 @@ fun AccountScreen() {
             Divider(color = Color.Cyan, thickness = 1.dp)
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = "${user.displayName}",
+                text = "${user.name}",
+                softWrap = true,
                 style = TextStyle(color = MaterialTheme.colors.onBackground, fontSize = 18.sp)
             )
             Divider(color = Color.Cyan, thickness = 1.dp)
@@ -81,15 +91,19 @@ fun AccountScreen() {
             Button(
                 onClick = {
                     Firebase.auth.signOut()
-                    Router.navigateTo(Screen.Home)
+                    coroutineScope.launch { viewModel.resetCurrentUser() }
+                    currentUser = null
+                    Router.navigateTo(Screen.NeedLogin)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(top = 10.dp, bottom = 70.dp, start = 10.dp, end = 10.dp)
             ) {
                 Text(text = "Sign Out")
                 Icon(imageVector = Icons.Default.ExitToApp, contentDescription = null)
             }
+        } else {
+            Text(text = "Bạn chưa đăng nhập")
         }
     }
 }

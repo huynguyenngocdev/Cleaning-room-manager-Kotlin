@@ -1,9 +1,14 @@
 package com.huydiem.cleaningroommanager.model
 
+import android.net.Uri
+import java.util.*
+
 data class TaskModel(
-    val id: String,
+    var id: String,
     val task: String,
+    val description: String,
     val status: Boolean,
-){
-    constructor() : this("", "",false)
+    val userId: String
+) {
+    constructor() : this("", "", "", false, "")
 }
