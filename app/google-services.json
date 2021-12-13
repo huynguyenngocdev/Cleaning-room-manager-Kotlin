@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1098667494586",
+    "project_id": "cleaning-room-manager",
+    "storage_bucket": "cleaning-room-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098667494586:android:417c53877fcb82224c8683",
+        "android_client_info": {
+          "package_name": "com.huydiem.cleaningroommanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098667494586-gimon39pvl92hd8785jra54j0s08evct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7jcS9hx1_rU36tqRqv0ej_y47chJEN08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098667494586-gimon39pvl92hd8785jra54j0s08evct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
