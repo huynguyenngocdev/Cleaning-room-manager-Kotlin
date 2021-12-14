@@ -80,7 +80,7 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                         Text(text = "Login")
                     },
                     navigationIcon = {
-                        IconButton(onClick = { Router.navigateTo(Screen.Home) }) {
+                        IconButton(onClick = { Router.navigateTo(Screen.NeedLogin) }) {
                             Icon(
                                 imageVector = Icons.Rounded.ArrowBack,
                                 contentDescription = null,
@@ -90,7 +90,8 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                     actions = {
                         IconButton(onClick = {
                             Firebase.auth.signOut()
-                            Router.navigateTo(Screen.Home)
+                            currentUser = null
+                            Router.navigateTo(Screen.NeedLogin)
                         }) {
                             Icon(
                                 imageVector = Icons.Rounded.ExitToApp,

@@ -14,11 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -28,13 +28,12 @@ import com.huydiem.cleaningroommanager.model.LoginScreenViewModel
 import com.huydiem.cleaningroommanager.model.UserModel
 import com.huydiem.cleaningroommanager.routing.Router
 import com.huydiem.cleaningroommanager.routing.Screen
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
 fun AccountScreen(user: UserModel, viewModel: LoginScreenViewModel) {
-
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -93,6 +92,7 @@ fun AccountScreen(user: UserModel, viewModel: LoginScreenViewModel) {
                     Firebase.auth.signOut()
                     coroutineScope.launch { viewModel.resetCurrentUser() }
                     currentUser = null
+                    context.cacheDir.deleteRecursively()
                     Router.navigateTo(Screen.NeedLogin)
                 },
                 modifier = Modifier
